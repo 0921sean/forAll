@@ -26,6 +26,7 @@ public class ReservationService extends Service{
         reservation.setSpace((Space) spaceService.findById(form.getSpace()));
         reservation.setRentDay(form.getRentDay());
         reservation.setTrialDay(form.getTrialDay());
+        reservation.setChefNum(form.getChefNum());
 
         return reservation;
     }
