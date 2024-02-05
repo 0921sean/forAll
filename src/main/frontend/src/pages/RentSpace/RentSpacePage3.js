@@ -128,7 +128,7 @@ const RentSpacePage3 = () => {
                             </div>
                             <div>
                                 <p>계좌번호<span style={{ color: "#FF2929" }} >*</span></p>
-                                <div  style={{width:'9rem',border:"1px solid",padding:"0.2rem", marginRight:"0.2rem"}} >454102-01-376503</div>
+                                <div  style={{width:'9rem',border:"1px solid",padding:"0.2rem", marginRight:"0.2rem"}} >454101-01-269800</div>
                             </div>
                             <div>
                                 <p>예금주<span style={{ color: "#FF2929" }} >*</span></p>
