@@ -46,17 +46,8 @@ public class ImageService extends Service {
 
     public String saveImage(final MultipartFile multipartFile) {
         String originalName = multipartFile.getOriginalFilename();
-        Image image = new Image();
-        // image.setId((long)300);
-        image.setOriginName(originalName);
-        // image.setImageName(UUID.randomUUID() + ".jpg");
-        image.setImageName(UUID.randomUUID() + originalName.substring(originalName.lastIndexOf('.'),
-                originalName.length()));
-        // image.setAccessUrl("");
-        // image.setOriginName(originalName);
-        // Image image = new Image(originalName);
-        String filename = image.getImageName();
-        imageRepository.save(image);
+        String filename = UUID.randomUUID() + originalName.substring(originalName.lastIndexOf('.'),
+                originalName.length());
         try {
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentType(multipartFile.getContentType());
@@ -64,15 +55,13 @@ public class ImageService extends Service {
 
             amazonS3Client.putObject(bucketName, filename, multipartFile.getInputStream(), objectMetadata);
 
-            log.info("Id of the image: " + image.getId());
-
 //            String accessUrl = amazonS3Client.getUrl(bucketName, filename).toString();
 //            image.setAccessUrl(accessUrl);
         } catch (IOException e) {
 
         }
 
-        return image.getImageName();
+        return filename;
     }
 
     public Image findByImageName(final String imageName){
