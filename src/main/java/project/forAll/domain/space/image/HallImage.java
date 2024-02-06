@@ -18,29 +18,18 @@ public class HallImage extends BassDomain {
     private Long id;
 
     // 홀 우측면
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hallRight_id")
-    private Image hallRight;
+    private String hallRight;
     // 홀 좌측면
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hallLeft_id")
-    private Image hallLeft;
+    private String hallLeft;
     // 홀 정면
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hallFront_id")
-    private Image hallFront;
+    private String hallFront;
     // 홀 후면
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hallBack_id")
-    private Image hallBack;
+    private String hallBack;
     // 홀 전체샷
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hallEntire_id")
-    private Image hallEntire;
+    private String hallEntire;
     // 홀 추가사진
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hallExtra_id")
-    private List<Image> hallExtra = new ArrayList<>();
+    @ElementCollection
+    private List<String> hallExtra = new ArrayList<>();
 
 //    public addImage(Image image) {
 //        this.hallExtra.add(image);

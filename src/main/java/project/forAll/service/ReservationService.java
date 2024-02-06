@@ -39,7 +39,7 @@ public class ReservationService extends Service{
         form.setTrialDay(reservation.getTrialDay());
         form.setChefNum(reservation.getChefNum());
 
-        form.setMainImage(reservation.getSpace().getPlace().getMainImage().getImageName());
+        form.setMainImage(reservation.getSpace().getPlace().getMainImage());
         form.setAddress(reservation.getSpace().getPlace().getAddress());
         form.setName(reservation.getSpace().getPlace().getName());
         form.setState(reservation.getState().toString());

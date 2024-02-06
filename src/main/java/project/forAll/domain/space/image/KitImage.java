@@ -18,29 +18,18 @@ public class KitImage extends BassDomain {
     private Long id;
 
     // 주방 우측면
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "kitRight_id")
-    private Image kitRight;
+    private String kitRight;
     // 주방 좌측면
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "kitLeft_id")
-    private Image kitLeft;
+    private String kitLeft;
     // 주방 정면
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "kitFront_id")
-    private Image kitFront;
+    private String kitFront;
     // 주방 후면
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "kitBack_id")
-    private Image kitBack;
+    private String kitBack;
     // 주방 전체샷
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "kitEntire_id")
-    private Image kitEntire;
+    private String kitEntire;
     // 주방 추가사진
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "kitExtra_id")
-    private List<Image> kitExtra = new ArrayList<>();
+    @ElementCollection
+    private List<String> kitExtra = new ArrayList<>();
 
 //    public addImage(Image image) {
 //        this.kitExtra.add(image);

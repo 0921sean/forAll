@@ -41,9 +41,8 @@ public class Space extends BassDomain {
 
     private String closeGuide;
     // 마감 사진들
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "closeImage_id")
-    private List<Image> closeImage = new ArrayList<>();
+    @ElementCollection
+    private List<String> closeImage = new ArrayList<>();
 
     // 공간 펜딩 여부
     private SpacePending spacePending;

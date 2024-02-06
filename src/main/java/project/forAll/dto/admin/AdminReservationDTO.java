@@ -23,7 +23,7 @@ public class AdminReservationDTO {
     public static AdminReservationDTO build(Reservation reservation){
         final AdminReservationDTO dto = new AdminReservationDTO();
         dto.setId(reservation.getId());
-        dto.setImage(reservation.getSpace().getPlace().getMainImage().getImageName());
+        dto.setImage(reservation.getSpace().getPlace().getMainImage());
         dto.setAddress(reservation.getSpace().getPlace().getAddress());
         dto.setName(reservation.getSpace().getPlace().getName());
         dto.setRentDay(reservation.getRentDay());

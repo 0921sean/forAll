@@ -18,19 +18,16 @@ public class Place extends BassDomain {
     private Long id;
 
     // 홀 사진들
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hallImage_id")
-    private List<Image> hallImage = new ArrayList<>();
+    @ElementCollection
+    private List<String> hallImage = new ArrayList<>();
 
     // 홀 사진들
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "kitImage_id")
-    private List<Image> kitImage = new ArrayList<>();
+    @ElementCollection
+    private List<String> kitImage = new ArrayList<>();
 
     // 메뉴 사진들
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menuImage_id")
-    private List<Image> menuImage = new ArrayList<>();
+    @ElementCollection
+    private List<String> menuImage = new ArrayList<>();
 
     // 공간명
     private String name;
@@ -47,7 +44,5 @@ public class Place extends BassDomain {
     // 웹사이트
     private String website;
     // 대표 이미지
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mainImage_id")
-    private Image mainImage;
+    private String mainImage;
 }

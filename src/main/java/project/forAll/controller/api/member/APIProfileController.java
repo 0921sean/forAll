@@ -137,7 +137,7 @@ public class APIProfileController extends APIController {
             final Profile profile = profileService.findByMember(member);
             if (profile == null) return new ResponseEntity(errorResponse("No profile found for id " + userId),
                     HttpStatus.NOT_FOUND);
-            return new ResponseEntity(profile.getProfilePhoto().getImageName(), HttpStatus.OK);
+            return new ResponseEntity(profile.getProfilePhoto(), HttpStatus.OK);
         }catch (final Exception e){
             return new ResponseEntity(errorResponse("Coult not get user profile : " + e.getMessage()), HttpStatus.BAD_REQUEST);
         }

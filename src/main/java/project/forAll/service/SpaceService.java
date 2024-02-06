@@ -78,15 +78,11 @@ public class SpaceService extends Service {
         place.setAddress(sf.getAddress());
         place.setAddressBrief(sf.getAddressBrief());
         place.setWebsite(sf.getWebsite());
-        Image mainImage = imageService.findByImageName(sf.getMainImage());
-        place.setMainImage(mainImage);
+        place.setMainImage(sf.getMainImage());
 
-        List<Image> hallImage = imageService.findListByIds(sf.getHallImage());
-        place.setHallImage(hallImage);
-        List<Image> kitImage = imageService.findListByIds(sf.getKitImage());
-        place.setKitImage(kitImage);
-        List<Image> menuImage = imageService.findListByIds(sf.getMenu());
-        place.setMenuImage(menuImage);
+        place.setHallImage(sf.getHallImage());
+        place.setKitImage(sf.getKitImage());
+        place.setMenuImage(sf.getMenu());
         savePlace(place);
         space.setPlace(place);
 
@@ -113,18 +109,12 @@ public class SpaceService extends Service {
         kitchen.setCapacity(sf.getCapacity());
         kitchen.setEquip(sf.getEquip());
         kitchen.setEquipExtra(sf.getEquipExtra());
-        List<Image> plateImage = imageService.findListByIds(sf.getPlateImage());
-        kitchen.setPlateImage(plateImage);
+        kitchen.setPlateImage(sf.getPlateImage());
         kitchen.setPlateNum(sf.getPlateNum());
-        List<Image> cupImage = imageService.findListByIds(sf.getCupImage());
-        kitchen.setCupImage(cupImage);
+        kitchen.setCupImage(sf.getCupImage());
         kitchen.setCupNum(sf.getCupNum());
-        List<Image> cutleryImage = imageService.findListByIds(sf.getCutleryImage());
-        kitchen.setCutleryImage(cutleryImage);
+        kitchen.setCutleryImage(sf.getCutleryImage());
         kitchen.setCutleryNum(sf.getCutleryNum());
-        List<Image> vatImage = imageService.findListByIds(sf.getVatImage());
-        kitchen.setVatImage(vatImage);
-        kitchen.setVatNum(sf.getVatNum());
         saveKitchen(kitchen);
         space.setKitchen(kitchen);
 
@@ -133,8 +123,7 @@ public class SpaceService extends Service {
         booking.setCompanyName(sf.getCompanyName());
         booking.setCeoName(sf.getCeoName());
         booking.setBizNum(sf.getBusinessNum());
-        Image bizImage = imageService.findByImageName(sf.getBusinessImage());
-        booking.setBizImage(bizImage);
+        booking.setBizImage(sf.getBusinessImage());
         booking.setBizAddr(sf.getBusinessAddress());
         booking.setPayEmail(sf.getPayEmail());
         booking.setPayPhoneNum(sf.getPayPhoneNum());
@@ -145,8 +134,7 @@ public class SpaceService extends Service {
         space.setBooking(booking);
 
         space.setCloseGuide(sf.getCloseGuide());
-        List<Image> closeImage = imageService.findListByIds(sf.getCloseImage());
-        space.setCloseImage(closeImage);
+        space.setCloseImage(sf.getCloseImage());
         space.setSpacePending(sf.getIsPublic() ? SpacePending.PENDING : SpacePending.NOTPUBLIC);
 
         return space;
@@ -165,11 +153,11 @@ public class SpaceService extends Service {
         sf.setAddress(place.getAddress());
         sf.setAddressBrief(place.getAddressBrief());
         sf.setWebsite(place.getWebsite());
-        sf.setMainImage(imageService.getImageName(place.getMainImage()));
+        sf.setMainImage(place.getMainImage());
 
-        sf.setHallImage(imageService.getImagesNames(place.getHallImage()));
-        sf.setKitImage(imageService.getImagesNames(place.getKitImage()));
-        sf.setMenu(imageService.getImagesNames(place.getMenuImage()));
+        sf.setHallImage(place.getHallImage());
+        sf.setKitImage(place.getKitImage());
+        sf.setMenu(place.getMenuImage());
 
         final Rent rent = space.getRent();
         sf.setAbleDate(rent.getAbleDate());
@@ -192,21 +180,19 @@ public class SpaceService extends Service {
         sf.setCapacity(kitchen.getCapacity());
         sf.setEquip(kitchen.getEquip());
         sf.setEquipExtra(kitchen.getEquipExtra());
-        sf.setPlateImage(imageService.getImagesNames(kitchen.getPlateImage()));
+        sf.setPlateImage(kitchen.getPlateImage());
         sf.setPlateNum(kitchen.getPlateNum());
-        sf.setCupImage(imageService.getImagesNames(kitchen.getCupImage()));
+        sf.setCupImage(kitchen.getCupImage());
         sf.setCupNum(kitchen.getCupNum());
-        sf.setCutleryImage(imageService.getImagesNames(kitchen.getCutleryImage()));
+        sf.setCutleryImage(kitchen.getCutleryImage());
         sf.setCutleryNum(kitchen.getCutleryNum());
-        sf.setVatImage(imageService.getImagesNames(kitchen.getVatImage()));
-        sf.setVatNum(kitchen.getVatNum());
 
         final Booking booking = space.getBooking();
         sf.setPayWay(booking.getPayWay().toString());
         sf.setCompanyName(booking.getCompanyName());
         sf.setCeoName(booking.getCeoName());
         sf.setBusinessNum(booking.getBizNum());
-        sf.setBusinessImage(imageService.getImageName(booking.getBizImage()));
+        sf.setBusinessImage(booking.getBizImage());
         sf.setBusinessAddress(booking.getBizAddr());
         sf.setPayEmail(booking.getPayEmail());
         sf.setPayPhoneNum(booking.getPayPhoneNum());
@@ -215,7 +201,7 @@ public class SpaceService extends Service {
         sf.setAccountHolder(booking.getAccountHolder());
 
         sf.setCloseGuide(space.getCloseGuide());
-        sf.setCloseImage(imageService.getImagesNames(space.getCloseImage()));
+        sf.setCloseImage(space.getCloseImage());
         sf.setIsPublic(space.getSpacePending() != SpacePending.NOTPUBLIC);
 
         return sf;
@@ -233,15 +219,11 @@ public class SpaceService extends Service {
         place.setAddress(sf.getAddress());
         place.setAddressBrief(sf.getAddressBrief());
         place.setWebsite(sf.getWebsite());
-        Image mainImage = imageService.findByImageName(sf.getMainImage());
-        place.setMainImage(mainImage);
+        place.setMainImage(sf.getMainImage());
 
-        List<Image> hallImage = imageService.findListByIds(sf.getHallImage());
-        place.setHallImage(hallImage);
-        List<Image> kitImage = imageService.findListByIds(sf.getKitImage());
-        place.setKitImage(kitImage);
-        List<Image> menuImage = imageService.findListByIds(sf.getMenu());
-        place.setMenuImage(menuImage);
+        place.setHallImage(sf.getHallImage());
+        place.setKitImage(sf.getKitImage());
+        place.setMenuImage(sf.getMenu());
         savePlace(place);
         space.setPlace(place);
 
@@ -268,18 +250,12 @@ public class SpaceService extends Service {
         kitchen.setCapacity(sf.getCapacity());
         kitchen.setEquip(sf.getEquip());
         kitchen.setEquipExtra(sf.getEquipExtra());
-        List<Image> plateImage = imageService.findListByIds(sf.getPlateImage());
-        kitchen.setPlateImage(plateImage);
+        kitchen.setPlateImage(sf.getPlateImage());
         kitchen.setPlateNum(sf.getPlateNum());
-        List<Image> cupImage = imageService.findListByIds(sf.getCupImage());
-        kitchen.setCupImage(cupImage);
+        kitchen.setCupImage(sf.getCupImage());
         kitchen.setCupNum(sf.getCupNum());
-        List<Image> cutleryImage = imageService.findListByIds(sf.getCutleryImage());
-        kitchen.setCutleryImage(cutleryImage);
+        kitchen.setCutleryImage(sf.getCutleryImage());
         kitchen.setCutleryNum(sf.getCutleryNum());
-        List<Image> vatImage = imageService.findListByIds(sf.getVatImage());
-        kitchen.setVatImage(vatImage);
-        kitchen.setVatNum(sf.getVatNum());
         saveKitchen(kitchen);
         space.setKitchen(kitchen);
 
@@ -288,8 +264,7 @@ public class SpaceService extends Service {
         booking.setCompanyName(sf.getCompanyName());
         booking.setCeoName(sf.getCeoName());
         booking.setBizNum(sf.getBusinessNum());
-        Image bizImage = imageService.findByImageName(sf.getBusinessImage());
-        booking.setBizImage(bizImage);
+        booking.setBizImage(sf.getBusinessImage());
         booking.setBizAddr(sf.getBusinessAddress());
         booking.setPayEmail(sf.getPayEmail());
         booking.setPayPhoneNum(sf.getPayPhoneNum());
@@ -300,8 +275,7 @@ public class SpaceService extends Service {
         space.setBooking(booking);
 
         space.setCloseGuide(sf.getCloseGuide());
-        List<Image> closeImage = imageService.findListByIds(sf.getCloseImage());
-        space.setCloseImage(closeImage);
+        space.setCloseImage(sf.getCloseImage());
         space.setSpacePending(sf.getIsPublic() ? SpacePending.PENDING : SpacePending.NOTPUBLIC);
 
         return space;

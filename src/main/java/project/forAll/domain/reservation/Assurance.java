@@ -21,30 +21,24 @@ public class Assurance extends BassDomain {
     private Reservation reservation;
 
     // 대관 준비 주방 이미지
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assurance_ready_kitImage_id")
-    private List<Image> readyKitImage;
+    @ElementCollection
+    private List<String> readyKitImage;
     // 대관 준비 홀 이미지
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assurance_ready_hallImage_id")
-    private List<Image> readyHallImage;
+    @ElementCollection
+    private List<String> readyHallImage;
     // 대관 준비 기타 사진
-    @OneToOne(fetch = FetchType.LAZY)
-    private Image readyAdditionalImage;
+    private String readyAdditionalImage;
 
     private String readyRecord; // 대관 진행 중 기록
 
     // 대관 마무리 주방 이미지
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assurance_fin_kitImage_id")
-    private List<Image> finKitImage;
+    @ElementCollection
+    private List<String> finKitImage;
     // 대관 마무리 홀 이미지
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assurance_fin_hallImage_id")
-    private List<Image> finHallImage;
+    @ElementCollection
+    private List<String> finHallImage;
     // 대관 마무리 기타 사진
-    @OneToOne(fetch = FetchType.LAZY)
-    private Image finAdditionalImage;
+    private String finAdditionalImage;
 
     private String finRecord; // 대관 진행 중 기록
 

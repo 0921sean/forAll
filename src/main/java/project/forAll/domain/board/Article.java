@@ -34,9 +34,8 @@ public class Article extends BassDomain {
     private Member writtenBy;
 
     // 첨부사진들
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "postImage_id")
-    private List<Image> postImage = new ArrayList<>();
+    @ElementCollection
+    private List<String> postImage;
 
     @ElementCollection
     private List<Long> recommend;

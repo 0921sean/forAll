@@ -32,7 +32,7 @@ public class ChefProfileForm {
         cf.setId(chefProfile.getId());
         cf.setUserId(chefProfile.getMember().getLoginId());
         cf.setCareer(chefProfile.getCareer());
-        cf.setCertificatePhoto(chefProfile.getCertificatePhoto() == null? null : chefProfile.getCertificatePhoto().getImageName());
+        cf.setCertificatePhoto(chefProfile.getCertificatePhoto());
         cf.setAccountBank(chefProfile.getAccountBank());
         cf.setAccountNum(chefProfile.getAccountNum());
         cf.setAccountHolder(chefProfile.getAccountHolder());

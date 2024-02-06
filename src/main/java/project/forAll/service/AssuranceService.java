@@ -23,13 +23,13 @@ public class AssuranceService extends Service{
         final Assurance assurance = new Assurance();
         if(form.getId() != null) assurance.setId(form.getId());
         assurance.setReservation((Reservation) reservationService.findById(form.getReservation()));
-        assurance.setReadyKitImage(imageService.findListByIds(form.getReadyKitImage()));
-        assurance.setReadyHallImage(imageService.findListByIds(form.getReadyHallImage()));
-        assurance.setReadyAdditionalImage(imageService.findByImageName(form.getReadyAdditionalImage()));
+        assurance.setReadyKitImage(form.getReadyKitImage());
+        assurance.setReadyHallImage(form.getReadyHallImage());
+        assurance.setReadyAdditionalImage(form.getReadyAdditionalImage());
         assurance.setReadyRecord(form.getReadyRecord());
-        assurance.setFinKitImage(imageService.findListByIds(form.getFinKitImage()));
-        assurance.setFinHallImage(imageService.findListByIds(form.getFinHallImage()));
-        assurance.setFinAdditionalImage(imageService.findByImageName(form.getFinAdditionalImage()));
+        assurance.setFinKitImage(form.getFinKitImage());
+        assurance.setFinHallImage(form.getFinHallImage());
+        assurance.setFinAdditionalImage(form.getFinAdditionalImage());
         assurance.setFinRecord(form.getFinRecord());
 
         return assurance;
@@ -38,12 +38,12 @@ public class AssuranceService extends Service{
         final AssuranceForm form = new AssuranceForm();
         form.setId(assurance.getId());
         form.setReservation(assurance.getReservation().getId());
-        form.setReadyKitImage(imageService.getImagesNames(assurance.getReadyKitImage()));
-        form.setReadyHallImage(imageService.getImagesNames(assurance.getReadyHallImage()));
-        form.setReadyAdditionalImage(imageService.getImageName(assurance.getReadyAdditionalImage()));
+        form.setReadyKitImage(assurance.getReadyKitImage());
+        form.setReadyHallImage(assurance.getReadyHallImage());
+        form.setReadyAdditionalImage(assurance.getReadyAdditionalImage());
         form.setReadyRecord(assurance.getReadyRecord());
-        form.setFinKitImage(imageService.getImagesNames(assurance.getFinKitImage()));
-        form.setFinHallImage(imageService.getImagesNames(assurance.getFinHallImage()));
+        form.setFinKitImage(assurance.getFinKitImage());
+        form.setFinHallImage(assurance.getFinHallImage());
         form.setFinRecord(assurance.getFinRecord());
 
         return form;

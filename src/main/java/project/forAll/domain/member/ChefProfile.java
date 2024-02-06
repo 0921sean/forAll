@@ -23,8 +23,7 @@ public class ChefProfile extends BassDomain {
     @ElementCollection
     private List<String> career;
     // 보건증 사진
-    @OneToOne(fetch = FetchType.LAZY)
-    private Image certificatePhoto;
+    private String certificatePhoto;
     // 은행명
     private String accountBank;
     // 계좌번호

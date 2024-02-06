@@ -176,7 +176,7 @@ public class MemberService extends Service {
         memberPublicDTO.setChefPending(member.getChefPending().toString());
 
         final Profile profile = profileRepository.findByMember(member).get(0);
-        memberPublicDTO.setProfileImage(profile.getProfilePhoto().getImageName());
+        memberPublicDTO.setProfileImage(profile.getProfilePhoto());
 
         List<Space> spaces = spaceRepository.findByMember(member);
         memberPublicDTO.setRegistedSpace(!spaces.isEmpty());
@@ -198,7 +198,7 @@ public class MemberService extends Service {
         if(!profiles.isEmpty()){
             final Profile profile = profiles.get(0);
             dto.setIntroduction(profile.getIntroduction());
-            dto.setProfilePhoto(profile.getProfilePhoto() != null ? profile.getProfilePhoto().getImageName() : null);
+            dto.setProfilePhoto(profile.getProfilePhoto());
             dto.setMbti(profile.getMbti());
             dto.setCook(profile.getCook());
             dto.setCookItem(profile.getCookItem());
@@ -208,7 +208,7 @@ public class MemberService extends Service {
         if(!chefProfiles.isEmpty()){
             final ChefProfile chefProfile = chefProfiles.get(0);
             dto.setCareer(chefProfile.getCareer());
-            dto.setCertificatePhoto(chefProfile.getCertificatePhoto().getImageName());
+            dto.setCertificatePhoto(chefProfile.getCertificatePhoto());
             dto.setAccountBank(chefProfile.getAccountBank());
             dto.setAccountNum(chefProfile.getAccountNum());
             dto.setAccountHolder(chefProfile.getAccountHolder());
