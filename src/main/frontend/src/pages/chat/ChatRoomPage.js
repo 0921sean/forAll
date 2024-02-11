@@ -13,6 +13,7 @@ import search from "../../components/icons/search.png";
 import folder from "../../components/icons/folder.png";
 import arrowleft from "../../components/icons/arrowleft.png";
 import clip from "../../components/icons/clip.png";
+import Header from "../../components/home/Header";
 
 const ChatRoomPage = () => {
     const location = useLocation();
@@ -26,7 +27,6 @@ const ChatRoomPage = () => {
     const [partnerData, setPartnerData] = useState();
     const [inputMessage, setInputMessage] = useState("");
     const [inputImage, setInputImage] = useState();
-    const [inputIsImage, setInputIsImage] = useState(false);
     const onChangeMessage = useCallback((e) => {
         setInputMessage(e.target.value);
     }, []);
@@ -81,23 +81,30 @@ const ChatRoomPage = () => {
             targetId: data.partner,
             chatRoomId: roomId,
             sendTime:  new Date().toJSON(),
-            isImage: inputIsImage
+            isImage: false
         };
-        if (inputIsImage){
-            chatMessage.messageContent = await ImageUploader(inputImage, sessionStorage.getItem("user_id"));
-        }
         client.current.send("/pub/chat/sendMessage", {}, JSON.stringify(chatMessage));
         setInputMessage("");
-        setInputIsImage(false);
-
     };
+    const sendImage = async () => {
+        if (!isConnected) return;
+        const chatMessage = {
+            messageContent: await ImageUploader(inputImage, sessionStorage.getItem("user_id")),
+            senderId: sessionStorage.getItem("user_id"),
+            targetId: data.partner,
+            chatRoomId: roomId,
+            sendTime:  new Date().toJSON(),
+            isImage: true
+        };
+        client.current.send("/pub/chat/sendMessage", {}, JSON.stringify(chatMessage));
+    };
+    useDidMountEffect(() => {
+        sendImage();
+    }, [inputImage]);
     return(
         <div>
             <div style={{position:"fixed", width:"100%"}}>
-                <div className="header" style={{backgroundColor:"white"}}> {/*헤더에 뒤로가기 버튼 집어넣기*/}
-                    <button className="button">대관하기</button>
-                    <button className="button">커뮤니티</button>
-                </div>
+                <Header/>
                 <Sidebar/>
                 <div style={{paddingTop:"3.125rem"}}></div>
                 <div className={"chat_category"}><p>{data.category === ChatRoomCategory.Reservation ? "채팅창 > 예약사항" : "채팅창 > 게시판"}</p></div>
@@ -134,14 +141,14 @@ const ChatRoomPage = () => {
                                     <div className={"chat_partner_id"}>{partner}</div>
                                     {message.isImage ? (
                                         <ImageViewer val={message.messageContent}/>
-                                    ) : (<div className={"chat_partner_message"}>{message.messageContent}</div>)}
+                                    ) : (<div className={"chat_partner_message"}><a>{message.messageContent}</a></div>)}
                                 </div>
                             </div>
                         ):(
-                            <div>
+                            <div className={"chat_message_container"} style={{justifyContent:"right"}}>
                                 {message.isImage ? (
                                     <ImageViewer val={message.messageContent}/>
-                                ) : (<div className={"chat_my_message"}>{message.messageContent}</div>)}
+                                ) : (<div className={"chat_my_message"}><a>{message.messageContent}</a></div>)}
                             </div>
                         )}
                     </div>
@@ -156,7 +163,6 @@ const ChatRoomPage = () => {
                                accept="image/*"
                                onChange={(e) => {
                                    setInputImage(e.target.files[0]);
-                                   setInputIsImage(true);
                                }}
                                style={{display: "none"}}
                         />

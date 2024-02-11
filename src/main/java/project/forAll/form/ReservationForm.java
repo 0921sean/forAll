@@ -22,8 +22,10 @@ public class ReservationForm {
     private Integer chefNum; // 셰프 수
 
     private String address; // 주소
+    private String mainImage; // 사진
     private String name; // 이름
     private String state; // 상태
     private Integer rentStartHour; // 대관 시작 시간
     private Integer rentEndHour; // 대관 종료 시간
+    private Integer priceSet; // 가격
 }

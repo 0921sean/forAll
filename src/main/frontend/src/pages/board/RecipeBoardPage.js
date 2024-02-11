@@ -6,12 +6,14 @@ import HomeTemplate from "../../components/home/HomeTemplate";
 import ArticleListTemplate from "../../components/board/ArticleListTemplate";
 import {TimeUtil} from "../../utils/TimeUtil";
 import ImageUploader from "../../utils/imageUploader";
-import {useNavigate} from "react-router-dom";
+import {redirect, useNavigate} from "react-router-dom";
 import ImagePreView from "../../components/ImagePreView";
 import updownImg from "../../components/icons/updown.jpg";
 import pencilImg from "../../components/icons/pencil.jpg";
 import ImageViewer from "../../components/ImageViewer";
 import clip from "../../components/icons/clip.png";
+import Header from "../../components/home/Header";
+import xmark from "../../components/icons/xmark.png";
 
 const RecipeBoardPage = () => {
     const navigate = useNavigate();
@@ -56,6 +58,7 @@ const RecipeBoardPage = () => {
                 <button className="button">대관하기</button>
                 <button className="button">커뮤니티</button>
             </div>
+            <Header/>
             <Sidebar/>
             <HomeTemplate />
             <div>
@@ -63,10 +66,10 @@ const RecipeBoardPage = () => {
                     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                     width: '100%', height: '3.125rem', flexShrink: 0, border: '1px solid #C4C4C4', background: '#FFF'
                 }}>
-                    <h1 style={{
-                        fontSize: '0.875rem', fontStyle: 'normal', fontWeight: '700', lineHeight: 'normal',
+                    <a style={{
+                        fontSize: '1.25rem', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal',
                         letterSpacing: '-0.01031rem', marginLeft: '0.1rem'
-                    }}>• 레시피</h1>
+                    }}>&ensp;• 레시피</a>
                     <img src={updownImg} alt="updownImg" style={{
                         width: '0.625rem', height: '0.625rem',
                         flexShrink: 0, marginRight: '1rem'
@@ -92,8 +95,6 @@ const RecipeBoardPage = () => {
                             fontSize: '0.625rem', fontStyle: 'normal', fontWeight: '500',
                             lineHeight: 'normal', letterSpacing: '-0.01031rem'
                         }}>새 글을 작성해주세요!</p>
-                        {/*<a onClick={() => setNewPost(true)}*/}
-                        {/*    disabled={!sessionStorage.getItem("user_id")}>새 글을 작성해주세요!</a>*/}
                     </div>
                 </div>
                 <div>
@@ -124,7 +125,7 @@ const RecipeBoardPage = () => {
                                 <label>
                                     <input type={"file"}
                                            accept="image/*"
-                                           onChange={(e) => setPostImage(Array.from(e.target.files))}
+                                           onChange={(e) => setPostImage([...postImage, ...Array.from(e.target.files)] )}
                                            style={{display: "none"}}
                                            multiple={true}
                                     />
@@ -148,7 +149,14 @@ const RecipeBoardPage = () => {
 
                             <div>
                                 {postImage ? postImage.map((img, idx) => (
-                                    <ImagePreView img={img}/>
+                                    <div style={{display:"flex"}}>
+                                        <ImagePreView img={img}/>
+                                        <div onClick={()=>setPostImage(postImage.filter((i) => i !== img))}>
+                                            <a>
+                                                <img src={xmark} alt="xmark" style={{width:"1.5rem", height:"1.5rem"}} />
+                                            </a>
+                                        </div>
+                                    </div>
                                 )) : null}
                             </div>
 

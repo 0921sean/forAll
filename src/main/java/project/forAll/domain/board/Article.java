@@ -2,15 +2,12 @@ package project.forAll.domain.board;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 import project.forAll.domain.BassDomain;
 import project.forAll.domain.Image;
 import project.forAll.domain.member.Member;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +22,7 @@ public class Article extends BassDomain {
     // 제목
     private String title;
     // 내용
+    @Column(length = 1000)
     private String content;
     // 생성일시 (수정일시)
     private String writtenAt;

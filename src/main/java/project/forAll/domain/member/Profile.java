@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import project.forAll.domain.BassDomain;
 import project.forAll.domain.Image;
-import project.forAll.domain.member.Member;
-import project.forAll.util.StringListConverter;
 
 import javax.persistence.*;
 import java.util.List;
@@ -35,17 +33,6 @@ public class Profile extends BassDomain {
     @OneToOne(fetch = FetchType.LAZY)
     private Image profilePhoto;
 
-    // 세부 소개
-    private String detailIntroduction;
-    // 경력
-    @ElementCollection
-    private List<String> career;
-    // 프로필 사진
-    @OneToOne(fetch = FetchType.LAZY)
-    private Image picture;
-    // 프로필 사진 설명
-    private String pictureExplain;
-
     // MBTI
     private String mbti;
     // 요리
@@ -55,13 +42,5 @@ public class Profile extends BassDomain {
     // 요리재료
     @ElementCollection
     private List<String> cookItem;
-
-
-    // 관심사
-    @ElementCollection
-    private List<String> interest;
-    // 보건증 사진
-    @OneToOne(fetch = FetchType.LAZY)
-    private Image certificate;
 
 }

@@ -1,12 +1,20 @@
-package project.forAll.domain.space;
+// package가 space로 되어있는데 reservation이 맞지 않나요..?
+// package project.forAll.domain.reservation;
+package project.forAll.domain.reservation;
 
 import lombok.Getter;
 
 @Getter
 public enum ReservationState {
 
+    // 대기중
     PENDING("Pending"),
+    // 승인
     APPROVE("Approve"),
+    // 거절
+    REJECT("Reject"),
+    // 취소
+    CANCEL("Cancel"),
     READY("Ready"),
     FINISH("Finish"),
     NotSpecified("Not Specified");

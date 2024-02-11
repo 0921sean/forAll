@@ -6,13 +6,14 @@ import HomeTemplate from "../../components/home/HomeTemplate";
 import ArticleListTemplate from "../../components/board/ArticleListTemplate";
 import {TimeUtil} from "../../utils/TimeUtil";
 import ImageUploader from "../../utils/imageUploader";
-import {useNavigate} from "react-router-dom";
+import {redirect, useNavigate} from "react-router-dom";
 import ImagePreView from "../../components/ImagePreView";
 import updownImg from "../../components/icons/updown.jpg";
 import pencilImg from "../../components/icons/pencil.jpg";
 import ImageViewer from "../../components/ImageViewer";
 import clip from "../../components/icons/clip.png";
-
+import Header from "../../components/home/Header";
+import xmark from "../../components/icons/xmark.png";
 const ChatBoardPage = () => {
     const navigate = useNavigate();
     const [postList, setPostList] = useState([]);
@@ -52,10 +53,7 @@ const ChatBoardPage = () => {
     }, []);
     return(
         <div>
-            <div className="header" style={{backgroundColor:"white"}}> {/*헤더에 뒤로가기 버튼 집어넣기*/}
-                <button className="button">대관하기</button>
-                <button className="button">커뮤니티</button>
-            </div>
+            <Header/>
             <Sidebar/>
             <HomeTemplate />
             <div>
@@ -63,10 +61,10 @@ const ChatBoardPage = () => {
                     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                     width: '100%', height: '3.125rem', flexShrink: 0, border: '1px solid #C4C4C4', background: '#FFF'
                 }}>
-                    <h1 style={{
-                        fontSize: '0.875rem', fontStyle: 'normal', fontWeight: '700', lineHeight: 'normal',
+                    <a style={{
+                        fontSize: '1.25rem', fontStyle: 'normal', fontWeight: '400', lineHeight: 'normal',
                         letterSpacing: '-0.01031rem', marginLeft: '0.1rem'
-                    }}>• 잡담</h1>
+                    }}>&ensp;• 잡담</a>
                     <img src={updownImg} alt="updownImg" style={{
                         width: '0.625rem', height: '0.625rem',
                         flexShrink: 0, marginRight: '1rem'
@@ -122,7 +120,7 @@ const ChatBoardPage = () => {
                                 <label>
                                     <input type={"file"}
                                            accept="image/*"
-                                           onChange={(e) => setPostImage(Array.from(e.target.files))}
+                                           onChange={(e) => setPostImage([...postImage, ...Array.from(e.target.files)] )}
                                            style={{display: "none"}}
                                            multiple={true}
                                     />
@@ -146,7 +144,14 @@ const ChatBoardPage = () => {
 
                             <div>
                                 {postImage ? postImage.map((img, idx) => (
-                                    <ImagePreView img={img}/>
+                                    <div style={{display:"flex"}}>
+                                        <ImagePreView img={img}/>
+                                        <div onClick={()=>setPostImage(postImage.filter((i) => i !== img))}>
+                                            <a>
+                                                <img src={xmark} alt="xmark" style={{width:"1.5rem", height:"1.5rem"}} />
+                                            </a>
+                                        </div>
+                                    </div>
                                 )) : null}
                             </div>
 

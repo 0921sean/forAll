@@ -8,9 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import project.forAll.domain.Image;
 import project.forAll.domain.member.Member;
 import project.forAll.domain.space.*;
-import project.forAll.domain.space.image.HallImage;
-import project.forAll.domain.space.image.KitImage;
-import project.forAll.domain.space.image.MenuImage;
 import project.forAll.form.SpaceForm;
 import project.forAll.repository.space.*;
 import project.forAll.repository.space.image.HallImageRepository;
@@ -150,7 +147,7 @@ public class SpaceService extends Service {
         space.setCloseGuide(sf.getCloseGuide());
         List<Image> closeImage = imageService.findListByIds(sf.getCloseImage());
         space.setCloseImage(closeImage);
-        space.setPublic(sf.getIsPublic());
+        space.setSpacePending(sf.getIsPublic() ? SpacePending.PENDING : SpacePending.NOTPUBLIC);
 
         return space;
     }
@@ -188,7 +185,7 @@ public class SpaceService extends Service {
         sf.setAbleWorkIn(rent.getAbleWorkIn());
         sf.setAbleMiseen(rent.getAbleMiseen());
         sf.setAbleMiseenStartTime(rent.getAbleMiseenStartTime());
-        sf.setAbleMiseenFinTime(rent.getAbleFinTime());
+        sf.setAbleMiseenFinTime(rent.getAbleMiseenFinTime());
 
         final Kitchen kitchen = space.getKitchen();
         sf.setFireholeNum(kitchen.getFireholeNum());
@@ -219,7 +216,7 @@ public class SpaceService extends Service {
 
         sf.setCloseGuide(space.getCloseGuide());
         sf.setCloseImage(imageService.getImagesNames(space.getCloseImage()));
-        sf.setIsPublic(space.isPublic());
+        sf.setIsPublic(space.getSpacePending() != SpacePending.NOTPUBLIC);
 
         return sf;
     }
@@ -305,7 +302,7 @@ public class SpaceService extends Service {
         space.setCloseGuide(sf.getCloseGuide());
         List<Image> closeImage = imageService.findListByIds(sf.getCloseImage());
         space.setCloseImage(closeImage);
-        space.setPublic(sf.getIsPublic());
+        space.setSpacePending(sf.getIsPublic() ? SpacePending.PENDING : SpacePending.NOTPUBLIC);
 
         return space;
     }

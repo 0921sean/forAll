@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import Header from "../../components/Header";
+import Header from "../../components/home/Header";
 import PersonalInfoModifyInputTemplate from "../../components/modify/PersonalInfoModifyInputTemplate";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -8,26 +8,39 @@ import "../../components/Styles.css";
 import UseTermsTemplate from "../../components/signup/UseTermsTemplate";
 import * as regularExpressions from "../../utils/regularExpressions";
 import Alert from "../../components/Alert";
+
 const PersonalModify = () => {
     const navigate = useNavigate();
     const [pw, setPw] = useState('');
     const [pwCheck, setPwCheck] = useState('');
-    const [name, setName] = useState(sessionStorage.getItem("name"));
-    const [email, setEmail] = useState(sessionStorage.getItem("email"));
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [defaultEmail, setDefaultEmail] = useState("");
     const [phone, setPhone] = useState("");
+    const [defaultPhone, setDefaultPhone] = useState("");
     const [cerifiedNum, setCerifiedNum] = useState('');
     const [birthDay, setBirthDay] = useState("");
     const [year, setYear] = useState('');
     const [month, setMonth] = useState('');
     const [day, setDay] = useState('');
     const [gender, setGender] = useState('');
-    const [isCheckDuplicatedEmail, setIsCheckDuplicatedEmail] = useState();
+    const [isCheckDuplicatedEmail, setIsCheckDuplicatedEmail] = useState(true);
     const [isCheckPw, setIsCheckPw] = useState();
     const [isUseTermsChecked, setIsUseTermsChecked] = useState(false);
-    const [isPhoneCerified, setIsPhoneCerified] = useState(false);
+    const [isPhoneCerified, setIsPhoneCerified] = useState(true);
     const [isAllChecked, setIsAllChecked] = useState(false);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const [alertContent, setAlertContent] = useState("");
+
+    const arrPW = pw.split('');
+    console.log(arrPW);
+    const isPasswordValid =
+        arrPW.length > 11 && arrPW.length < 15 &&
+        arrPW.some(element => /[a-zA-Z]/.test(element)) && // 영문자 포함 여부 확인
+        arrPW.some(element => /[0-9]/.test(element)) && // 숫자 포함 여부 확인
+        arrPW.some(element => /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(element)); // 특수 문자 포함 여부 확인
+
+
     const openAlert = (string) => {
         setAlertContent(string);
         setIsAlertOpen(true);
@@ -66,6 +79,10 @@ const PersonalModify = () => {
         axios.get("/api/v1/members/user/" + id)
             .then((res) => {
                 setPhone(res.data.phoneNum);
+                setDefaultPhone(res.data.phoneNum);
+                setName(res.data.name);
+                setEmail(res.data.email);
+                setDefaultEmail(res.data.email);
                 setYear(res.data.birthday.split('/')[0]);
                 setMonth(res.data.birthday.split('/')[1]);
                 setDay(res.data.birthday.split('/')[2]);
@@ -77,7 +94,9 @@ const PersonalModify = () => {
     }, []);
 
     const handleButton = () => {
-        if (pw === "") {
+        if (!(isPasswordValid || pw.length===0)) {
+            openAlert("비밀번호 형식을 맞춰주세요.");
+        } else if(pw === "") {
             openAlert("비밀번호는 필수 입력 사항입니다");
         } else if (name === "") {
             openAlert("이름은 필수 입력 사항입니다");
@@ -147,6 +166,7 @@ const PersonalModify = () => {
                     day={day}
                     gender={gender}
                     cerifiedNum={cerifiedNum}
+                    pw={pw}
                     setPw={setPw}
                     setPwCheck={setPwCheck}
                     setName={setName}
@@ -163,17 +183,45 @@ const PersonalModify = () => {
                     isCheckPw={isCheckPw}
                     isPhoneCerified={isPhoneCerified}
                     setIsPhoneCerified={setIsPhoneCerified}
+                    defaultEmail={defaultEmail}
+                    defaultPhone={defaultPhone}
                 />
                 <UseTermsTemplate
                     setIsUseTermsChecked={setIsUseTermsChecked}
                 />
             </div>
-            <div style={{ display: 'flex', width: '100%', margin: '0px', marginTop: '4rem' }}>
-                <button style={{ marginLeft: 'auto', backgroundColor: "#FF4F4F", width: '50%', bottom: '0', height: '3.125rem', color: 'white', border: 'none', lineHeight: '1.875rem', textAlign: 'center' }}
+            <div style={{
+                display: 'flex',
+                width: '100%',
+                margin: '0px',
+                marginTop: '4rem',
+
+                fontSize: "0.9375rem",
+                fontWeight: "400"
+            }}>
+                <button style={{
+                    marginLeft: 'auto',
+                    backgroundColor: "#FF4F4F",
+                    width: '50%',
+                    bottom: '0',
+                    height: '3.125rem',
+                    color: 'white',
+                    border: 'none',
+                    lineHeight: '1.875rem',
+                    textAlign: 'center' }}
                         onClick={() => navigate('/')}
                 >
                     이전</button>
-                <button style={{ marginLeft: 'auto', backgroundColor: "#525252", width: '50%', bottom: '0', height: '3.125rem', color: 'white', border: 'none', lineHeight: '1.875rem', textAlign: 'center' }}
+                <button style={{
+                    marginLeft: 'auto',
+                    backgroundColor: "#525252",
+                    width: '50%',
+                    bottom: '0',
+                    height: '3.125rem',
+                    color: 'white',
+                    border: 'none',
+                    lineHeight: '1.875rem',
+                    textAlign: 'center' }}
                         onClick={() => handleButton()}
                 >다음</button>
             </div>

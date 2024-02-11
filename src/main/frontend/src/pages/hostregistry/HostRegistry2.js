@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import React, { useState } from "react";
 
 
 import "../../components/Styles.css";
@@ -10,6 +10,8 @@ import ImageInput from "../../components/ImageInput";
 import { ModalStyles } from "../../components/ModalStyles";
 import { ExplanationModalStyles } from "../../components/ExplanationModalStyles";
 import ForAllLogo from "../../components/ForAllLogo";
+import {SmallModalStyles} from "../../components/SmallModalStyles";
+import ImageUploader from "../../utils/imageUploader";
 
 
 const HostRegistry2 = () => {
@@ -31,13 +33,12 @@ const HostRegistry2 = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const [pending, setPending] = useState(false);
 
     const data = { ...location.state };
     let isPublic = false;
     const handleButton = () => {
-        if ((img1 !== "") && (img2 !== "") && (img3 !== "") && (kitchen1 !== "") && (kitchen2 !== "") && (kitchen3 !== "") && (menu1 !== "") && (menuAdditional !== "")) {
-
-
+        if ((img1 !== "") && (img2 !== "") && (img3 !== "") && (kitchen1 !== "") && (kitchen2 !== "") && (kitchen3 !== "") && (menu1 !== "")) {
             isPublic = true;
             submit();
         }
@@ -46,24 +47,24 @@ const HostRegistry2 = () => {
         }
     };
 
-    const submit = () => {
+    const submit = async () => {
+        if(pending) return;
+        setPending(true);
+        const userId = sessionStorage.getItem("user_id");
         data.isPublic = data.isPublic && isPublic;
-
-
+        const [hallImage, kitImage, menu] = await Promise.all(
+            [
+                Promise.all([img1, img2, img3, ...imgAdditional].filter((img) => typeof (img) === 'object').map( (img) =>  ImageUploader(img, userId))),
+                Promise.all([kitchen1, kitchen2, kitchen3, ...kitchenAdditional].filter((img) => typeof (img) === 'object').map( (img) =>  ImageUploader(img, userId))),
+                Promise.all([menu1, ...menuAdditional].filter((img) => typeof (img) === 'object').map( (img) =>  ImageUploader(img, userId)))
+            ]
+        )
         navigate("/hostRegistry3", {
-
             state: {
                 ...data,
-                img1: img1,
-                img2: img2,
-                img3: img3,
-                imgAdditional: imgAdditional,
-                kitchen1: kitchen1,
-                kitchen2: kitchen2,
-                kitchen3: kitchen3,
-                kitchenAdditional: kitchenAdditional,
-                menu1: menu1,
-                menuAdditional: menuAdditional,
+                hallImage: hallImage,
+                kitImage: kitImage,
+                menu: menu
             }
         });
     };
@@ -74,14 +75,13 @@ const HostRegistry2 = () => {
                 display: "flex",
                 justifyContent: "space-around",
                 flexDirection: "column",
-                gap: "1.5rem"
             }}>
-            <header style={{ textAlign: "center" }}><p>(1/4) 공간 정보</p></header>
-            <div style={{ padding: '1rem', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <header style={{ textAlign: "center",marginBottom:"-0.5rem" }}><p>(1/4) 공간 정보</p></header>
+            <div style={{ padding: '1rem', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div >
                     <ForAllLogo />
                     <a className="fontForRegister" >홀 사진<span className="fontForRegister" style={{ color: "#FF2929" }} >*</span></a>
-                    <hr style={{ height: "1px", backgroundColor: "black", marginBottom: '0' }} />
+                    <hr style={{ height: "2px", backgroundColor: "black", marginBottom: '0' }} />
                     <a className="fontForRegister" style={{ color: '#7B7B7B' }}>홈페이지에 노출될 사진입니다. 오너님의 공간이 돋보일 수 있도록 예쁘게 찍어주세요!</a>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', justifyContent: 'center', marginTop: '2rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'right' }} >
@@ -106,14 +106,14 @@ const HostRegistry2 = () => {
                             </div>
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", justifyContent: 'flex-start', alignItems: 'flex-start' }}>
-                            <a>추가사진<span className="fontForRegister" style={{ color: "#FF2929" }} >*</span></a>
+                            <a>추가사진</a>
                             <ImageInputs setImg={setImgAdditional} vals={imgAdditional} />
                         </div>
                     </div>
                 </div>
                 <div>
                     <a className="fontForRegister" >주방 사진<span className="fontForRegister" style={{ color: "#FF2929" }} >*</span></a>
-                    <hr style={{ height: "1px", backgroundColor: "black", marginBottom: '0' }} />
+                    <hr style={{ height: "2px", backgroundColor: "black", marginBottom: '0' }} />
                     <a className="fontForRegister" style={{ color: '#7B7B7B' }}>홈페이지에 노출될 사진입니다. 오너님의 공간이 돋보일 수 있도록 예쁘게 찍어주세요!</a>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', justifyContent: 'center', marginTop: '2rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'right' }} >
@@ -138,14 +138,14 @@ const HostRegistry2 = () => {
                             </div>
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", justifyContent: 'flex-start', alignItems: 'flex-start' }}>
-                            <a>추가사진<span className="fontForRegister" style={{ color: "#FF2929" }} >*</span></a>
+                            <a>추가사진</a>
                             <ImageInputs setImg={setKitchenAdditional} vals={kitchenAdditional} />
                         </div>
                     </div>
                 </div>
                 <div>
                     <a className="fontForRegister" >메뉴 사진<span className="fontForRegister" style={{ color: "#FF2929" }} >*</span></a>
-                    <hr style={{ height: "1px", backgroundColor: "black", marginBottom: '0' }} />
+                    <hr style={{ height: "2px", backgroundColor: "black", marginBottom: '0' }} />
                     <button style={{
                         border: "none",
                         backgroundColor: "white",
@@ -172,16 +172,16 @@ const HostRegistry2 = () => {
                                     onClick={() => setIsModalOpen2(false)}>x</a>
                             </div>
                             <hr style={{ height: "2px", backgroundColor: "black" }} />
-                            <p style={{ textAlign: 'left', paddingLeft: "1rem", paddingRight: "1rem" }}>•&ensp;매장에서
+                            <p style={{ textAlign: 'left', paddingLeft: "5%", paddingRight: "5%" }}>•&ensp;매장에서
                                 사용중인
                                 메뉴를 통해 플레이트 종류를 확인할 수 있습니다.</p>
-                            <p style={{ textAlign: 'left', paddingLeft: "1rem", paddingRight: "1rem" }}>•&ensp;셰프님들이
+                            <p style={{ textAlign: 'left', paddingLeft: "5%", paddingRight: "5%" }}>•&ensp;셰프님들이
                                 예약
                                 시 매장의 다양한 <a style={{ textDecorationLine: "underline" }}>플레이트 종류가</a> 선택이유가 될 수 있으니, 다양한
                                 메뉴를
                                 올려주세요.</p>
 
-                            <div className="bottom_button_fixed">
+                            <div className="bottom_button_relative">
                                 <a style={{ fontSize: "0.8rem" }} onClick={() => setIsModalOpen2(false)}>닫기</a>
                             </div>
 
@@ -195,21 +195,89 @@ const HostRegistry2 = () => {
                             </div>
                         </div>
                         <div >
-                            <a>추가사진<span className="fontForRegister" style={{ color: "#FF2929" }} >*</span></a>
+                            <a>추가사진</a>
                             <ImageInputs setImg={setMenuAdditional} vals={menuAdditional} />
                         </div>
                     </div>
                 </div>
 
-                <Modal isOpen={isModalOpen} style={{ ...ModalStyles, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }} ariaHideApp={false}>
-                    <div style={{ textAlign: "left" }} >
-                        <p>현재 필수 입력사항이 모두 기입되지 않았습니다.</p>
-                        <p>이 경우 해당 공간은 '비공개' 상태로 등록되며, 게스트들에게 노출되지 않습니다.</p>
+                <Modal isOpen={isModalOpen} ariaHideApp={false} style={SmallModalStyles}>
+                    <div style={{
+                        justifyContent: "center", alignItems: "center",
+                        fontFamily: "Noto Sans KR",
+                        color: " #000",
+                        fontSize: "1.25rem",
+                        fontStyle: "normal",
+                        fontWeight: "400",
+                        lineHeight: "normal",
+
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+
+                    }}>
+                        <a style={{fontSize: '0.9375rem'}}>현재 필수 입력사항이 모두 기입되지 않았습니다.</a>
+                        <p style={{fontSize: '0.9375rem'}}>이 경우 해당 공간은 '비공개' 상태로 등록되며, 게스트들에게 노출되지 않습니다.</p>
                     </div>
-                    <hr style={{ height: "1px", backgroundColor: "lightgrey" }} />
-                    <div style={{ display: 'flex', width: '100%'}} >
-                        <button style={{ flex: 1,border:'none',background:'white',}}  onClick={() => setIsModalOpen(false)}>뒤로</button>
-                        <button style={{ flex: 1,border:'none',background:'white',}}  onClick={() => submit()}>다음</button>
+                    <div style={{
+                        display: 'flex',
+                        width: '100%',
+                        margin: '0px',
+                        marginTop: '4rem',
+                        bottom: '0',
+                        position: 'fixed',
+                        fontSize: "0.9375rem",
+                        fontWeight: "400"
+                    }}>
+                        <button style={{
+                            backgroundColor: "#FF4F4F",
+
+                            width: '50%',
+                            bottom: '0',
+                            height: '3.125rem',
+                            color: 'white',
+                            border: 'none',
+                            lineHeight: '1.875rem',
+                            textAlign: 'center'
+                        }}
+                                onClick={() => setIsModalOpen(false)}
+                        >
+                            마저 입력하기
+                        </button>
+                        <button style={{
+                            backgroundColor: "#000",
+
+                            width: '50%',
+                            bottom: '0',
+                            height: '3.125rem',
+                            color: 'white',
+                            border: 'none',
+                            lineHeight: '1.875rem',
+                            textAlign: 'center'
+                        }}
+                                onClick={() => submit()}
+                        >
+                            넘어가기
+                        </button>
+                    </div>
+                </Modal>
+                <Modal isOpen={pending} ariaHideApp={false} style={SmallModalStyles}>
+                    <div style={{
+                        justifyContent: "center", alignItems: "center",
+                        fontFamily: "Noto Sans KR",
+                        color: " #000",
+                        fontSize: "1.25rem",
+                        fontStyle: "normal",
+                        fontWeight: "400",
+                        lineHeight: "normal",
+
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+
+                    }}>
+                        <a style={{fontSize: '0.9375rem'}}>현재 입력사항을 업로드 중입니다.</a>
+                        <p style={{fontSize: '0.9375rem'}}>잠시만 기다려주세요.</p>
                     </div>
                 </Modal>
             </div>

@@ -1,12 +1,17 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import Header from "../../components/Header";
+import React, { useState, useEffect } from "react";
+import Header from "../../components/home/Header";
 import axios from "axios";
 import ImageInput from "../../components/ImageInput";
 import Modal from "react-modal";
 import { ModalStyles } from "../../components/ModalStyles";
 import { KitchenFeat } from "../../utils/enums";
 import ForAllLogo from "../../components/ForAllLogo";
+import { ExplanationModalStyles } from "../../components/ExplanationModalStyles";
+import ImageUploader from "../../utils/imageUploader";
+import iImg from "../../components/icons/i.png";
+import { SmallModalStyles } from "../../components/SmallModalStyles";
+
 const PlaceInfoModifyStart = () => {
   const navigate = useNavigate();
   const [data, setData] = useState({});
@@ -29,6 +34,10 @@ const PlaceInfoModifyStart = () => {
   const [modalIsOpen2, setModalIsOpen2] = useState(false);
   const [modalIsOpen3, setModalIsOpen3] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    console.log(webSite);
+  }, [webSite]);
+  const [pending, setPending] = useState(false);
   const downloadData = async () => {
     let spaceid;
     await axios.get("/api/v1/space/userSpace/" + sessionStorage.getItem("user_id"))
@@ -37,6 +46,7 @@ const PlaceInfoModifyStart = () => {
     axios
       .get("/api/v1/space/" + spaceid)
       .then((res) => {
+        console.log(res.data);
         setData(res.data);
         setPlaceName(res.data.name);
         setFullAddress(res.data.address);
@@ -94,24 +104,28 @@ const PlaceInfoModifyStart = () => {
       setIsModalOpen(true);
     }
   };
-  const submit = () => {
+  const submit = async () => {
+    if (pending) return;
+    setPending(true);
+    const userId = sessionStorage.getItem("user_id");
+    const img = await ImageUploader(imgRepresent, userId);
     navigate("/placeInfoModify2", {
       state: {
+        ...data,
         placeName: placeName,
         placeIntro: placeIntro,
         placeIntroDetail: placeIntroDetail,
         kitchen: kitchen,
         address: fullAddress,
-        webSite: webSite,
+        website: webSite,
         placeInfo: placeInfo,
-        imgRepresent: imgRepresent,
+        imgRepresent: img,
         isPublic: isPublic,
       },
     });
   };
   return (
     <div
-      className="fontForRegister"
       style={{
         display: "flex",
         justifyContent: "space-around",
@@ -119,10 +133,10 @@ const PlaceInfoModifyStart = () => {
       }}
     >
       <ForAllLogo />
-      <header style={{ textAlign: "center" }}><h3>(1/4) 공간 정보</h3></header>
+      <header style={{ textAlign: "center" }}><p>(1/4) 공간 정보</p></header>
       <div style={{ padding: '1rem', width: '100%', boxSizing: 'border-box', gap: '1rem', display: 'flex', flexDirection: 'column' }}>
         <div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className="fontForRegister" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div>
               <a>공간명을 입력해주세요.<span style={{ color: '#FF2929' }} >*</span></a>
               <hr style={{ height: "2px", backgroundColor: "black" }} />
@@ -140,14 +154,20 @@ const PlaceInfoModifyStart = () => {
                 defaultValue={data.name}
                 onChange={onInputHandler}
                 className="input"
-                maxLength="17"
+                maxLength="18"
+                style={{ width: "98%" }}
               />
-              <a>❕사용 가능한 특수문자: (,),(-),(.),(@),(/)</a>
+              <div style={{ marginTop: '0.5rem', justifyContent: 'left', display: 'flex' }}>
+                <img src={iImg} alt="iImg"
+                  style={{ width: '1rem', height: '1rem', flexShrink: 0 }} />
+                &ensp;
+                <a style={{ paddingTop: "0.05rem" }}>사용 가능한 특수문자: (,),(-),(.),(@),(/)</a>
+              </div>
             </div>
 
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} >
-                <a>공간 한 줄 소개<span style={{ color: '#FF2929' }} >*</span></a>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <a>공간 한 줄 소개<span style={{ color: '#FF2929' }}>*</span></a>
                 <p>
                   <span>{placeIntro.length}</span>
                   <span>/18자</span>
@@ -158,7 +178,9 @@ const PlaceInfoModifyStart = () => {
                 defaultValue={data.spaceBrief}
                 onChange={onInputHandler2}
                 className="input"
-                maxLength="17"
+                maxLength="18"
+                style={{ width: "98%" }}
+
               />
             </div>
 
@@ -175,28 +197,23 @@ const PlaceInfoModifyStart = () => {
                 type="text"
                 defaultValue={data.spaceIntro}
                 className="input"
-                style={{ height: "6.25rem" }}
+                style={{ height: "6.25rem", width: '98%' }}
                 onChange={onInputHandler3}
-                maxLength="299"
-                minLength="19"
+                maxLength="300"
+                minLength="20"
               />
             </div>
             <div>
               <a>주방 특성<span style={{ color: '#FF2929' }} >*</span></a>
               <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly" }}>
-                <div style={{ flexDirection: "column", display: "flex" }} >
+                <div style={{ flexDirection: "column", display: "flex" }}>
                   <div>
-                    <button
+                    <button className="square_button"
                       name="kitchen"
                       value={KitchenFeat.Open}
                       style={{
-                        backgroundColor: (kitchen === KitchenFeat.Open) || clicked1 ? "black" : "white",
-                        color: (kitchen === KitchenFeat.Open) || clicked1 ? "white" : "black",
-                        width: "6.875rem",
-                        height: "1.875rem",
-                        flex: "1",
-                        flexShrink: '0',
-                        border: "1px solid #D9D9D9"
+                        backgroundColor: kitchen === KitchenFeat.Open || clicked1 ? "black" : "white",
+                        color: kitchen === KitchenFeat.Open || clicked1 ? "white" : "black",
                       }}
                       onClick={(event) => {
                         const selected = event.target.value;
@@ -208,43 +225,61 @@ const PlaceInfoModifyStart = () => {
                         setClicked2(false);
                         setClicked3(false);
                       }}
+
                     >
                       오픈형
                     </button>
                   </div>
                   <div>
-                    <Modal
-                      isOpen={modalIsOpen1}
-                      style={ModalStyles}
-                    >
-                      <h3 style={{ margin: "0px", textAlign: "left" }}>오픈형 주방이란?</h3>
-                      <hr style={{ height: "2px", backgroundColor: "black", width: "100%" }} />
-                      <div style={{ textAlign: 'left', fontSize: '14px' }} >
-                        <p>• 주방, 홀이 하나로 결합된 형태입니다.</p>
-                        <p>• 주방과 홀이 결합되면서 음식을 만드는 사람과 가까이할 수 있어
+                    <Modal isOpen={modalIsOpen1} style={ExplanationModalStyles}>
+                      <div style={{
+                        fontFamily: "Noto Sans KR",
+                        color: " #000",
+                        fontSize: "0.625rem",
+                        fontStyle: "normal",
+                        fontWeight: "400",
+                        lineHeight: "normal"
+                      }}>
+                        <br />
+                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                          <a style={{ textAlign: "left" }}>오픈형 주방이란?</a><a
+                            style={{ textAlign: "right" }}
+                            onClick={() => setModalIsOpen1(false)}>x</a>
+                        </div>
+                        <hr style={{ height: "1px", backgroundColor: "black" }} />
+                        <p style={{
+                          textAlign: 'left',
+                          paddingLeft: "5%",
+                          paddingRight: "5%"
+                        }}>•&ensp;주방, 홀이 하나로 결합된 형태입니다.</p>
+                        <p style={{
+                          textAlign: 'left',
+                          paddingLeft: "5%",
+                          paddingRight: "5%"
+                        }}>•&ensp;주방과 홀이 결합되면서 음식을 만드는 사람과 가까이할 수 있어
                           대면형보다 더 긴밀한 커뮤니케이션이 가능하며, 요리를 하는 동시에 식사가 가능한 형태를 띕니다.
                         </p>
                       </div>
-                      <button onClick={modalClose1} >닫기</button>
+                      <div class="bottom_button_fixed">
+                        <a onClick={() => setModalIsOpen1(false)}>닫기</a>
+                      </div>
+
                     </Modal>
                     <button onClick={() => setModalIsOpen1(true)}
-                      style={{ border: "none", backgroundColor: "white", fontSize: "10px" }}>• 오픈형이 무엇인가요?
+                      style={{ border: "none", backgroundColor: "white", fontSize: "10px" }}>• 오픈형이
+                      무엇인가요?
                     </button>
                   </div>
                 </div>
-                <div style={{ flexDirection: "column" }} >
+                <div style={{ flexDirection: "column" }}>
                   <div>
-                    <button
+                    <button className="square_button"
                       name="kitchen"
                       value={KitchenFeat.Face}
                       style={{
-                        backgroundColor: (kitchen === KitchenFeat.Face) || clicked2 ? "black" : "white",
-                        color: (kitchen === KitchenFeat.Face) || clicked2 ? "white" : "black",
-                        width: "6.875rem",
-                        height: "1.875rem",
-                        flex: "1",
-                        marginLeft: "0.63rem",
-                        border: "1px solid #D9D9D9"
+                        backgroundColor: data.kitchenFeat === KitchenFeat.Face || clicked2 ? "black" : "white",
+                        color: data.kitchenFeat === KitchenFeat.Face || clicked2 ? "white" : "black",
+
                       }}
                       onClick={(event) => {
                         const selected = event.target.value;
@@ -263,36 +298,54 @@ const PlaceInfoModifyStart = () => {
                   <div>
                     <Modal
                       isOpen={modalIsOpen2}
-                      style={ModalStyles}
-                    >
-                      <h3 style={{ margin: "0px", textAlign: "left" }} >대면형 주방이란?</h3>
-                      <hr style={{ height: "2px", backgroundColor: "black", width: "100%" }} />
-                      <div style={{ textAlign: 'left', fontSize: '14px' }} >
-                        <p>• 부엌과 다이닝룸이 한 공간에 자리하는 형태입니다.</p>
-                        <p>• 식탁이 따로 놓여 있지만, 음식을 만드는 사람의 얼굴을 보며
-                          대화를 나눌 수 있는 구조입니다.
-                        </p>
+                      style={ExplanationModalStyles}>
+
+                      <div style={{
+                        fontFamily: "Noto Sans KR",
+                        color: " #000",
+                        fontSize: "0.625rem",
+                        fontStyle: "normal",
+                        fontWeight: "400",
+                        lineHeight: "normal"
+                      }}>
+                        <br />
+                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                          <a style={{ textAlign: "left" }}>대면형 주방이란?</a><a
+                            style={{ textAlign: "right" }}
+                            onClick={() => setModalIsOpen2(false)}>x</a>
+                        </div>
+                        <hr style={{ height: "1px", backgroundColor: "black" }} />
+                        <p style={{
+                          textAlign: 'left',
+                          paddingLeft: "5%",
+                          paddingRight: "5%"
+                        }}>•&ensp;부엌과 다이닝룸이 한 공간에 자리하는 형태입니다.</p>
+                        <p style={{
+                          textAlign: 'left',
+                          paddingLeft: "5%",
+                          paddingRight: "5%"
+                        }}>•&ensp;식탁이 따로 놓여 있지만, 음식을 만드는 사람의 얼굴을 보며
+                          대화를 나눌 수 있는 구조입니다.</p>
                       </div>
-                      <button onClick={modalClose2}>닫기</button>
+                      <div class="bottom_button_fixed">
+                        <a onClick={() => setModalIsOpen2(false)}>닫기</a>
+                      </div>
                     </Modal>
                     <button onClick={() => setModalIsOpen2(true)}
-                      style={{ border: "none", backgroundColor: "white", fontSize: "10px" }}>• 대면형이 무엇인가요?
+                      style={{ border: "none", backgroundColor: "white", fontSize: "10px" }}>• 대면형이
+                      무엇인가요?
                     </button>
                   </div>
                 </div>
-                <div style={{ flexDirection: "column" }} >
+                <div style={{ flexDirection: "column" }}>
                   <div>
-                    <button
+                    <button className="square_button"
                       name="kitchen"
                       value={KitchenFeat.Close}
                       style={{
-                        backgroundColor: (kitchen === KitchenFeat.Close) || clicked3 ? "black" : "white",
-                        color: (kitchen === KitchenFeat.Close) || clicked3 ? "white" : "black",
-                        width: "6.875rem",
-                        height: "1.875rem",
-                        flex: "1",
-                        marginLeft: "0.63rem",
-                        border: "1px solid #D9D9D9",
+                        backgroundColor: kitchen === KitchenFeat.Close || clicked3 ? "black" : "white",
+                        color: kitchen === KitchenFeat.Close || clicked3 ? "white" : "black",
+
                       }}
                       onClick={(event) => {
                         const selected = event.target.value;
@@ -304,6 +357,7 @@ const PlaceInfoModifyStart = () => {
                         setClicked2(false);
                         setClicked3(!clicked3);
                       }}
+
                     >
                       폐쇄형
                     </button>
@@ -311,32 +365,60 @@ const PlaceInfoModifyStart = () => {
                   <div>
                     <Modal
                       isOpen={modalIsOpen3}
-                      style={ModalStyles}
+                      style={ExplanationModalStyles}
                     >
-                      <h3 style={{ margin: "0px", textAlign: "left" }} >폐쇄형 주방이란?</h3>
-                      <hr style={{ height: "2px", backgroundColor: "black", width: "100%" }} />
-                      <div style={{ textAlign: 'left', fontSize: '14px' }} >
-                        <p>• 차분하게 조리와 정리에 전념할 수 있습니다.</p>
-                        <p>• 또한, 조리할 때 발생하는 오염과 냄새, 연기, 소리 등이 거실에 비교적 전달이 되지 않습니다.
+                      <div style={{
+                        fontFamily: "Noto Sans KR",
+                        color: " #000",
+                        fontSize: "0.625rem",
+                        fontStyle: "normal",
+                        fontWeight: "400",
+                        lineHeight: "normal"
+                      }}>
+                        <br />
+                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                          <a style={{ textAlign: "left" }}>폐쇄형 주방이란?</a><a
+                            style={{ textAlign: "right" }}
+                            onClick={() => setModalIsOpen3(false)}>x</a>
+                        </div>
+                        <hr style={{ height: "1px", backgroundColor: "black" }} />
+                        <p style={{
+                          textAlign: 'left',
+                          paddingLeft: "5%",
+                          paddingRight: "5%"
+                        }}>•&ensp;차분하게 조리와 정리에 전념할 수 있습니다.</p>
+                        <p style={{
+                          textAlign: 'left',
+                          paddingLeft: "5%",
+                          paddingRight: "5%"
+                        }}>•&ensp;또한, 조리할 때 발생하는 오염과 냄새, 연기, 소리 등이 거실에 비교적 전달이 되지 않습니다.
                         </p>
-                        <p>• 홀에서는 어수선한 모습이 보이지 않아 쾌적한 매장 환경이 만들어집니다.</p>
+                        <p style={{
+                          textAlign: 'left',
+                          paddingLeft: "5%",
+                          paddingRight: "5%"
+                        }}>•&ensp;홀에서는 어수선한 모습이 보이지 않아 쾌적한 매장 환경이 만들어집니다.</p>
                       </div>
-                      <button onClick={modalClose3}>닫기</button>
+                      <div class="bottom_button_fixed">
+                        <a onClick={() => setModalIsOpen3(false)}>닫기</a>
+                      </div>
+
                     </Modal>
                     <button onClick={() => setModalIsOpen3(true)}
-                      style={{ border: "none", backgroundColor: "white", fontSize: "10px" }}>• 폐쇄형이 무엇인가요?
+                      style={{ border: "none", backgroundColor: "white", fontSize: "10px" }}>• 폐쇄형이
+                      무엇인가요?
                     </button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div style={{ marginTop: '1.5rem' }} >
+          <div className="fontForRegister" style={{ marginTop: '1.5rem' }} >
             <a>위치 정보<span style={{ color: '#FF2929' }} >*</span></a>
-            <hr style={{ height: "1px", backgroundColor: "black", marginBottom: '1rem' }} />
+            <hr style={{ height: "2px", backgroundColor: "black", marginBottom: '1rem' }} />
             <a>주소(위치)<span style={{ color: '#FF2929' }} >*</span></a>
-            <div>
-              <span className="input" style={{ disabled: true }}>{fullAddress}</span>
+            <div >
+              <span className="input" style={{ disabled: true, width: '98%' }}>{fullAddress}</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column' }} >
               <a>
@@ -347,7 +429,7 @@ const PlaceInfoModifyStart = () => {
               </a>
             </div>
           </div>
-          <div style={{ marginTop: '1.5rem' }}>
+          <div className="fontForRegister" style={{ marginTop: '1.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} >
               <a>상세 위치 정보<span style={{ color: '#FF2929' }} >*</span></a>
               <p>
@@ -359,19 +441,22 @@ const PlaceInfoModifyStart = () => {
               type="text"
               defaultValue={data.addressBrief}
               onChange={onInputHandler4}
-              maxLength="17"
+              maxLength="18"
               className="input"
+              style={{ width: "98%" }}
             />
             <a>• 작성하신 위치정보는 검색에 영향을 미치지 않습니다.</a>
 
           </div>
-          <div style={{ marginTop: '1.5rem' }}>
+          <div className="fontForRegister" style={{ marginTop: '1.5rem' }}>
             <a>웹사이트<span style={{ color: '#FF2929' }} >*</span></a>
             <input
               type="text"
-              defaultValue={data.website}
+              value={webSite}
               onChange={(e) => setWebSite(e.target.value)}
               className="input"
+              style={{ width: "98%" }}
+
             />
             <div style={{ display: 'flex', flexDirection: 'column' }} >
               <a>
@@ -383,13 +468,13 @@ const PlaceInfoModifyStart = () => {
             </div>
           </div>
           <div style={{ marginTop: '1.5rem' }}>
-            <div style={{display:'flex',flexDirection:'column'}} >
-            <a>
-              <span>대표 이미지<span style={{ color: '#FF2929' }} >*</span></span>
-            </a>
-            <a style={{ color: '#C4C4C4' }} >
-                                매장의 간판이 보이는 이미지를 첨부해 주세요.
-                            </a>
+            <div className="fontForRegister" style={{ display: 'flex', flexDirection: 'column' }} >
+              <a>
+                <span>대표 이미지<span style={{ color: '#FF2929' }} >*</span></span>
+              </a>
+              <a style={{ color: '#C4C4C4' }} >
+                매장의 간판이 보이는 이미지를 첨부해 주세요.
+              </a>
             </div>
             <div>
               <ImageInput setImg={setImgRepresent} val={imgRepresent} />
@@ -406,14 +491,84 @@ const PlaceInfoModifyStart = () => {
           onClick={() => handleButton()}
         >다음</button>
 
-        <Modal isOpen={isModalOpen} style={ModalStyles} ariaHideApp={false}>
-          <p>현재 필수 입력사항이 모두 기입되지 않았습니다.</p>
-          <p>
-            이 경우 해당 공간은 '비공개' 상태로 등록되며, 게스트들에게 노출되지
-            않습니다.
-          </p>
-          <button onClick={() => setIsModalOpen(false)}>뒤로</button>
-          <button onClick={() => submit()}>다음</button>
+        <Modal isOpen={isModalOpen} ariaHideApp={false} style={SmallModalStyles}>
+          <div style={{
+            justifyContent: "center", alignItems: "center",
+            fontFamily: "Noto Sans KR",
+            color: " #000",
+            fontSize: "1.25rem",
+            fontStyle: "normal",
+            fontWeight: "400",
+            lineHeight: "normal",
+
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+
+          }}>
+            <a style={{ fontSize: '0.9375rem' }}>현재 필수 입력사항이 모두 기입되지 않았습니다.</a>
+            <p style={{ fontSize: '0.9375rem' }}>이 경우 해당 공간은 '비공개' 상태로 등록되며, 게스트들에게 노출되지 않습니다.</p>
+          </div>
+          <div style={{
+            display: 'flex',
+            width: '100%',
+            margin: '0px',
+            marginTop: '4rem',
+            bottom: '0',
+            position: 'fixed',
+            fontSize: "0.9375rem",
+            fontWeight: "400"
+          }}>
+            <button style={{
+              backgroundColor: "#FF4F4F",
+
+              width: '50%',
+              bottom: '0',
+              height: '3.125rem',
+              color: 'white',
+              border: 'none',
+              lineHeight: '1.875rem',
+              textAlign: 'center'
+            }}
+              onClick={() => setIsModalOpen(false)}
+            >
+              마저 입력하기
+            </button>
+            <button style={{
+              backgroundColor: "#000",
+
+              width: '50%',
+              bottom: '0',
+              height: '3.125rem',
+              color: 'white',
+              border: 'none',
+              lineHeight: '1.875rem',
+              textAlign: 'center'
+            }}
+              onClick={() => submit()}
+            >
+              넘어가기
+            </button>
+          </div>
+        </Modal>
+        <Modal isOpen={pending} ariaHideApp={false} style={SmallModalStyles}>
+          <div style={{
+            justifyContent: "center", alignItems: "center",
+            fontFamily: "Noto Sans KR",
+            color: " #000",
+            fontSize: "1.25rem",
+            fontStyle: "normal",
+            fontWeight: "400",
+            lineHeight: "normal",
+
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+
+          }}>
+            <a style={{ fontSize: '0.9375rem' }}>현재 입력사항을 업로드 중입니다.</a>
+            <p style={{ fontSize: '0.9375rem' }}>잠시만 기다려주세요.</p>
+          </div>
         </Modal>
       </div>
     </div>

@@ -43,8 +43,8 @@ const SignUpPage = () => {
             .then((response) => {
                 setIsCheckDuplicatedId(true);
             }).catch((response) => {
-                setIsCheckDuplicatedId(false);
-            });
+            setIsCheckDuplicatedId(false);
+        });
 
     };
     const checkDuplicatedEmail = () => {
@@ -56,12 +56,19 @@ const SignUpPage = () => {
                 .then((response) => {
                     setIsCheckDuplicatedEmail(true);
                 }).catch((response) => {
-                    setIsCheckDuplicatedEmail(false);
-                });
+                setIsCheckDuplicatedEmail(false);
+            });
         }
-
-
     };
+
+    const arrPW = pw.split('');
+    console.log(arrPW);
+    const isPasswordValid =
+        arrPW.length > 11 && arrPW.length < 15 &&
+        arrPW.some(element => /[a-zA-Z]/.test(element)) && // 영문자 포함 여부 확인
+        arrPW.some(element => /[0-9]/.test(element)) && // 숫자 포함 여부 확인
+        arrPW.some(element => /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(element)); // 특수 문자 포함 여부 확인
+
 
     const sendCerifiedNum = () => {
         const phoneRule = regularExpressions.phoneNum;
@@ -73,8 +80,8 @@ const SignUpPage = () => {
                 .then((response) => {
                     openModal("인증번호를 발송했습니다.");
                 }).catch((response) => {
-                    openModal("인증번호를 발송하지 못했습니다.");
-                });
+                openModal("인증번호를 발송하지 못했습니다.");
+            });
         }
     };
     const checkCerifiedNum = () => {
@@ -82,8 +89,8 @@ const SignUpPage = () => {
             .then((response) => {
                 setIsPhoneCerified(true);
             }).catch((response) => {
-                setIsPhoneCerified(false);
-            });
+            setIsPhoneCerified(false);
+        });
     };
 
     useDidMountEffect(() => {
@@ -97,7 +104,9 @@ const SignUpPage = () => {
     const handleButton = () => {
         if (id === "") {
             openModal("아이디는 필수 입력 사항입니다.");
-        } else if (pw === "") {
+        } else if (!(isPasswordValid || pw.length===0)) {
+            openModal("비밀번호 형식을 맞춰주세요.");
+        }else if (pw === "") {
             openModal("비밀번호는 필수 입력 사항입니다.");
         } else if (name === "") {
             openModal("이름은 필수 입력 사항입니다.");
@@ -129,19 +138,19 @@ const SignUpPage = () => {
     };
     const submit = () => {
         if (isAllChecked) {
-            navigate('/guestRegistry',{
+            navigate('/guestRegistry', {
                 state: {
                     loginId: id,
                     loginPw: pw,
                     name: name,
-                    birthday: birthDay,
-                    gender: gender,
                     email: email,
-                    phoneNum: phone
+                    phoneNum: phone,
+                    birthday: birthDay,
+                    gender:gender
                 }
             });
-        }
 
+        }
     }
     return (
         <div>
@@ -150,7 +159,7 @@ const SignUpPage = () => {
                 flexDirection: "column",
                 alignItems: "center",
                 gap: "2.5rem",
-                
+
             }} >
                 <div style={{
                     textAlign: "center",
@@ -187,23 +196,16 @@ const SignUpPage = () => {
                 <UseTermsTemplate
                     setIsUseTermsChecked={setIsUseTermsChecked}
                 />
-
-
-                {isAllChecked ? <SignUpInformationTemplate
-                    setIsAllChecked={setIsAllChecked}
-                    submit={submit}
-                /> : null}
-
                 <Alert isOpen={isModalOpen} setIsOpen={setIsModalOpen} content={alertContent} />
 
             </div>
             <div style={{ display: 'flex', width: '100%', margin: '0px', marginTop: '4rem' }}>
                 <button style={{ marginLeft: 'auto', backgroundColor: "#FF4F4F", width: '50%', bottom: '0', height: '3.125rem', color: 'white', border: 'none', lineHeight: '1.875rem', textAlign: 'center' }}
-                    onClick={() => navigate('/login')}
+                        onClick={() => navigate('/login')}
                 >
                     이전</button>
                 <button style={{ marginLeft: 'auto', backgroundColor: "#525252", width: '50%', bottom: '0', height: '3.125rem', color: 'white', border: 'none', lineHeight: '1.875rem', textAlign: 'center' }}
-                    onClick={() => handleButton()}
+                        onClick={() => handleButton()}
                 >다음</button>
             </div>
         </div>

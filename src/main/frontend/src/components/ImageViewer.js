@@ -1,33 +1,21 @@
 import {useEffect, useRef, useState} from "react";
+import {GetImageUri} from "../utils/GetImage";
 
-
-
-const ImageViewer = ({val,style}) => {
-
-
-    const spring_app_url = "http://localhost:8080";
+const ImageViewer = ({val, style, isfixed=false}) => {
     // 기본 이미지 추후 설정 필요
     const BaseImgSrc = "/logo512.png";
-    const [imgFile, setImgFile] = useState("");
-    useEffect(() => {
-        if (!val) setImgFile("");
-        else setImgFile(spring_app_url + "/api/v1/image/"+val);
-    }, [val]);
     const onErrorImg = (e) => {
         e.target.src = BaseImgSrc;
     }
     return (
-        <div style={{height:"20vh"}}>
+        <div>
             <label>
                 <img
                     className="image"
-                    src={imgFile}
+                    src={GetImageUri(val)}
                     alt={"image"}
                     onError={onErrorImg}
-
-                    style={style}
-
-
+                    style ={isfixed ? { width: "100%", height:"33vh"}: style}
                 />
             </label>
         </div>

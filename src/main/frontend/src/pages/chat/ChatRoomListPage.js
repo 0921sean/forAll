@@ -6,6 +6,8 @@ import axios from "axios";
 import {ChatRoomCategory} from "../../utils/enums";
 import "../../style/ChatRoom.css";
 import {TimeUtil} from "../../utils/TimeUtil";
+import Header from "../../components/home/Header";
+import {StringUtil} from "../../utils/StringUtil";
 const ChatRoomListPage = () => {
     const navigate = useNavigate();
     const [reservation, setReservation] = useState([]);
@@ -23,10 +25,7 @@ const ChatRoomListPage = () => {
 
     return (
         <div>
-            <div className="header" style={{backgroundColor:"white"}}> {/*헤더에 뒤로가기 버튼 집어넣기*/}
-                <button className="button">대관하기</button>
-                <button className="button">커뮤니티</button>
-            </div>
+            <Header/>
             <Sidebar/>
             <div>
                 <div style={{paddingTop:"3.125rem"}}></div>
@@ -47,7 +46,7 @@ const ChatRoomListPage = () => {
                                     </div>
                                     <div style={{display:"flex", justifyContent:"space-between", height:"50%"}}>
                                         <div style={{textAlign:"left"}}>
-                                            <div className={"chat_room_last_message"}>{chat.lastMessage}</div>
+                                            <div className={"chat_room_last_message"}>{chat.lastMessage ? StringUtil.postPreViewContent(chat.lastMessage) : ""}</div>
                                         </div>
                                         {chat.notReadCount > 0 ? (
                                             <div style={{textAlign:"right"}}>
@@ -82,7 +81,7 @@ const ChatRoomListPage = () => {
                                     </div>
                                     <div style={{display:"flex", justifyContent:"space-between", height:"50%"}}>
                                         <div style={{textAlign:"left"}}>
-                                            <div className={"chat_room_last_message"}>{chat.lastMessage}</div>
+                                            <div className={"chat_room_last_message"}>{chat.lastMessage ? StringUtil.postPreViewContent(chat.lastMessage) : ""}</div>
                                         </div>
                                         {chat.notReadCount > 0 ? (
                                             <div style={{textAlign:"right"}}>

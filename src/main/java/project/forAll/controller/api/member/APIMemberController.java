@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class APIMemberController extends APIController {
+public class  APIMemberController extends APIController {
 
     private final MemberService memberService;
     private final MemberRepository memberRepository;
@@ -102,6 +102,15 @@ public class APIMemberController extends APIController {
             return new ResponseEntity(errorResponse("Duplicated email : " + e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
+    @GetMapping("/members/checkPhone/{phone}")
+    public ResponseEntity checkDuplicatedPhone(@PathVariable("phone") final String phone){
+        try {
+            memberService.validateDuplicatePhone(phone);
+            return new ResponseEntity(phone, HttpStatus.OK);
+        } catch(final Exception e) {
+            return new ResponseEntity(errorResponse("Duplicated phone number : " + e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @PutMapping("/members")
     public ResponseEntity editMember(@RequestBody final MemberForm form, HttpServletRequest request){
@@ -163,5 +172,12 @@ public class APIMemberController extends APIController {
         }catch (final Exception e){
             return new ResponseEntity(errorResponse("Could not check member was chef :" + e.getMessage()), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/members/checkSession")
+    public ResponseEntity checkLogInSession(HttpServletRequest request){
+        String loginId = (String) sessionManager.getSession(request);
+        if (loginId == null) return new ResponseEntity("Session expired", HttpStatus.BAD_REQUEST);
+        else return new ResponseEntity("Session exist", HttpStatus.OK);
     }
 }

@@ -1,4 +1,4 @@
-import Header from "../components/Header";
+import Header from "../components/home/Header";
 import SearchIdTemplate from "../components/SearchIdTemplate";
 import {useState} from "react";
 import * as regularExpressions from "../utils/regularExpressions";
@@ -47,7 +47,6 @@ const SearchIdPage = () => {
 
     return (
         <div>
-            <Header PageName={"아이디 찾기"}/>
             <SearchIdTemplate
                 id={id}
                 setName={setName}
@@ -58,9 +57,6 @@ const SearchIdPage = () => {
                 checkCerifiedNum={checkCerifiedNum}
                 sendCerifiedNum={sendCerifiedNum}
             />
-            <Link to={"/login"}>
-                <button>홈화면</button>
-            </Link>
             <Alert isOpen={isAlertOpen} setIsOpen={setIsAlertOpen} content={alertContent} />
         </div>
     )

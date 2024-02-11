@@ -6,14 +6,14 @@ export const ModalStyles = {
         bottom: 'auto',
         marginRight: '-50%',
         transform: 'translate(-50%, -50%)',
-        backgroundColor: 'white',
+        backgroundColor: 'white', 
         color: 'black', 
-        width: '21.875rem',
+        width: '80%',
         height: '12.5rem',
         border: '1px solid'+ '#C4C4C4',
         background: '#FFF',
         textAlign: 'center',
-
+        zIndex: '1000'
     },
     overlay: {
         backgroundColor: 'rgba(0, 0, 0, 0.75)' 

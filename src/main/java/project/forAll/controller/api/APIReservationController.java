@@ -7,11 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import project.forAll.controller.SessionManager;
 import project.forAll.domain.reservation.Reservation;
 import project.forAll.domain.member.Member;
-import project.forAll.domain.space.ReservationState;
+import project.forAll.domain.reservation.ReservationState;
 import project.forAll.form.ReservationForm;
-import project.forAll.repository.ReservationRepository;
+import project.forAll.repository.reservation.ReservationRepository;
 import project.forAll.service.MemberService;
 import project.forAll.service.ReservationService;
+import project.forAll.dto.ReservationCancelDTO;
 
 import java.util.List;
 
@@ -103,10 +104,20 @@ public class APIReservationController extends APIController{
         try{
             final Member member = memberService.findByLoginId(userId);
             List<Reservation> reservations = reservationRepository.findByMember(member);
-            List<ReservationForm> forms = reservations.stream().map(reservation -> reservationService.of(reservation)).toList();
+            List<ReservationForm> forms = reservations.stream().filter(reservation -> reservation.getState() != ReservationState.CANCEL).map(reservation -> reservationService.of(reservation)).toList();
             return new ResponseEntity(forms, HttpStatus.OK);
         }catch (final Exception e){
             return new ResponseEntity(errorResponse("Could not get user Reservation" + e.getMessage()), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/reservation/cancel")
+    public void cancelReservation(@RequestBody ReservationCancelDTO dto){
+        final Reservation reservation = (Reservation) reservationService.findById(dto.getId());
+        reservation.setState(ReservationState.CANCEL);
+        reservation.setCancelReason(dto.getReason());
+        reservation.setCancelTime(dto.getCancelTime());
+        reservationService.save(reservation);
+
     }
 }
