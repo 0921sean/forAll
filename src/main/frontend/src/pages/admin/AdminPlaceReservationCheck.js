@@ -128,7 +128,7 @@ const AdminPlaceReservationCheck = () => {
                         {TimeUtil.toReservationDate(data.cancelTime)}
                     </strong>
                 </p>
-            </div>) : null}
+            </div>) : (<div style={{paddingBottom:"3rem"}}></div>)}
             <button onClick={() => navigate("/admin", {state: data})} className="bottom_button"
                     style={{backgroundColor: "#FF4F4F", position: "fixed"}}>돌아가기
             </button>

@@ -30,8 +30,7 @@ public class Profile extends BassDomain {
 
     // 헷갈림 방지로 picture에서 profilePhoto로 변수명 변경
     // 프로필 사진
-    @OneToOne(fetch = FetchType.LAZY)
-    private Image profilePhoto;
+    private String profilePhoto;
 
     // MBTI
     private String mbti;

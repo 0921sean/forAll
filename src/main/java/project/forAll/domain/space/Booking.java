@@ -25,9 +25,7 @@ public class Booking extends BassDomain {
     // 사업자 등록번호
     private String bizNum;
     // 사업자 등록증
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bizImage_id")
-    private Image bizImage;
+    private String bizImage;
     // 사업자 주소
     private String bizAddr;
     // 정산용 이메일

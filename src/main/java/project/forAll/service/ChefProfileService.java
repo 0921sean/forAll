@@ -31,8 +31,7 @@ public class ChefProfileService extends Service {
         if (cf.getId() != null) chefProfile.setId(cf.getId());
         chefProfile.setMember(memberService.findByLoginId(cf.getUserId()));
         chefProfile.setCareer(cf.getCareer());
-        final Image image = imageService.findByImageName(cf.getCertificatePhoto());
-        chefProfile.setCertificatePhoto(image);
+        chefProfile.setCertificatePhoto(cf.getCertificatePhoto());
         chefProfile.setAccountBank(cf.getAccountBank());
         chefProfile.setAccountNum(cf.getAccountNum());
         chefProfile.setAccountHolder(cf.getAccountHolder());

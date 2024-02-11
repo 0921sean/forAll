@@ -38,7 +38,7 @@ public class ProfileForm {
         pf.setId(profile.getId());
         pf.setUserId(profile.getMember().getLoginId());
         pf.setIntroduction(profile.getIntroduction());
-        pf.setProfilePhoto(profile.getProfilePhoto() == null? null : profile.getProfilePhoto().getImageName());
+        pf.setProfilePhoto(profile.getProfilePhoto());
         pf.setMbti(profile.getMbti());
         pf.setCook(profile.getCook());
         pf.setCookItem(profile.getCookItem());

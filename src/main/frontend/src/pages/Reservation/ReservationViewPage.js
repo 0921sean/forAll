@@ -108,6 +108,7 @@ const ReservationViewPage = () => {
                     </strong>
                 </p>
             </div>
+            <div style={{paddingBottom:"3rem"}}></div>
             <button onClick={()=>navigate(-1)} className="bottom_button"
                     style={{backgroundColor: "#FF4F4F", position: "fixed"}}>돌아가기
             </button>

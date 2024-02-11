@@ -36,9 +36,7 @@ public class ProfileService extends Service {
         profile.setMember(member);
         profile.setIntroduction(pf.getIntroduction());
 
-
-        final Image image = imageService.findByImageName(pf.getProfilePhoto());
-        profile.setProfilePhoto(image);
+        profile.setProfilePhoto(pf.getProfilePhoto());
         profile.setMbti(pf.getMbti());
         profile.setCook(pf.getCook());
         profile.setCookItem(pf.getCookItem());
@@ -59,8 +57,7 @@ public class ProfileService extends Service {
         ProfilePublicDTO profilePublicDTO = new ProfilePublicDTO();
         profilePublicDTO.setId(profile.getId());
         profilePublicDTO.setIntroduction(profile.getIntroduction());
-        profilePublicDTO.setProfilePhoto(profile.getProfilePhoto() == null ?
-                null : profile.getProfilePhoto().getImageName());
+        profilePublicDTO.setProfilePhoto(profile.getProfilePhoto());
         profilePublicDTO.setMbti(profile.getMbti());
         profilePublicDTO.setCook(profile.getCook());
         profilePublicDTO.setCookItem(profile.getCookItem());
